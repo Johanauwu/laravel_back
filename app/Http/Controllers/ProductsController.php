@@ -12,8 +12,8 @@ class ProductsController extends Controller
     public function getProducts(Request $request): object 
     {
         $validator = Validator::make($request->all(),[
-            "id" => "int",
-            "tipo_estado" => "nullable|int", 
+            "isbn" => "string|nullable", 
+            "nombre" => "string|nullable", 
         ]);
 
         if($validator->fails()){
@@ -28,20 +28,10 @@ class ProductsController extends Controller
     public function addProducts(Request $request): object 
     {
         $validator = Validator::make($request->all(),[
-            "id_proveedor" => "int", 
-            "cartera" => "string", 
-            "tipo_estado" => "int", 
-            "especial" => "nullable|int", 
-            "predictivo" => "nullable|int", 
-            "progresivo" => "nullable|int", 
-            "IVR_Identify" => "nullable|int", 
-            "user_activa" => "int|nullable", 
-            "fecha_activa" => "date|nullable",
-            "id_troncal" => "nullable|int", 
-            "aleatorio" => "nullable|int", 
-            "tipo_llamada" => "nullable|int", 
-            "did" => "nullable|string", 
-            "actualizacion" => "nullable|int"
+            "isbn" => "string",
+            "name" => "string", 
+            "stock" => "int", 
+            "current_price" => "string", 
         ]);
 
         if($validator->fails()){
@@ -54,32 +44,20 @@ class ProductsController extends Controller
         return (object) ResponseHelper::json_success(array(),"");
     }
 
-    public function editProducts($id,Request $request): object 
+    public function editProducts($book_id,Request $request): object 
     {
         $validator = Validator::make($request->all(),[
-            "id_proveedor" => "required|int", 
-            "cartera" => "required|string", 
-            "tipo_estado" => "nullable|int", 
-            "especial" => "nullable|int", 
-            "predictivo" => "nullable|int", 
-            "progresivo" => "nullable|int", 
-            "IVR_Identify" => "nullable|int", 
-            "user_activa" => "nullable|int", 
-            "fecha_activa" => "nullable|date", 
-            "user_cancela" => "nullable|int", 
-            "fecha_cancela" => "nullable|date", 
-            "id_troncal" => "nullable|int", 
-            "aleatorio" => "nullable|int", 
-            "tipo_llamada" => "nullable|int", 
-            "did" => "nullable|string", 
-            "actualizacion" => "nullable|int"
+            "isbn" => "string",
+            "name" => "string", 
+            "stock" => "int", 
+            "current_price" => "string", 
         ]);
 
         if($validator->fails()){
             return (object) ResponseHelper::json_fail_puts($validator);
         }
 
-        $response = ProductsRepository::EditProducts($id,$request);
+        $response = ProductsRepository::EditProducts($book_id,$request);
         if(!$response){
             return (object) ResponseHelper::json_fail($response);
         }
@@ -87,17 +65,10 @@ class ProductsController extends Controller
 
     }
 
-    public function deleteProducts($id,Request $request): object 
-    {
-        $validator = Validator::make($request->all(),[
-            "tipo_estado" => "int"
-        ]);
+    public function deleteProducts($id): object 
+    { 
 
-        if($validator->fails()){
-            return (object) ResponseHelper::json_fail($validator);
-        }
-
-        $response = ProductsRepository::DeleteProducts($id,$request);
+        $response = ProductsRepository::DeleteProducts($id);
         if(!$response){
             return (object) ResponseHelper::json_fail($response);
         }

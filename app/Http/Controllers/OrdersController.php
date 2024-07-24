@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\structure\Helpers\ResponseHelper;
+use App\Http\structure\Repositories\OrdersRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,20 +28,8 @@ class OrdersController extends Controller
     public function addOrders(Request $request): object 
     {
         $validator = Validator::make($request->all(),[
-            "id_proveedor" => "int", 
-            "cartera" => "string", 
-            "tipo_estado" => "int", 
-            "especial" => "nullable|int", 
-            "predictivo" => "nullable|int", 
-            "progresivo" => "nullable|int", 
-            "IVR_Identify" => "nullable|int", 
-            "user_activa" => "int|nullable", 
-            "fecha_activa" => "date|nullable",
-            "id_troncal" => "nullable|int", 
-            "aleatorio" => "nullable|int", 
-            "tipo_llamada" => "nullable|int", 
-            "did" => "nullable|string", 
-            "actualizacion" => "nullable|int"
+            "client_id" => "int",  
+            "doc_type" => "int",  
         ]);
 
         if($validator->fails()){
@@ -56,22 +45,10 @@ class OrdersController extends Controller
     public function editOrders($id,Request $request): object 
     {
         $validator = Validator::make($request->all(),[
-            "id_proveedor" => "required|int", 
-            "cartera" => "required|string", 
-            "tipo_estado" => "nullable|int", 
-            "especial" => "nullable|int", 
-            "predictivo" => "nullable|int", 
-            "progresivo" => "nullable|int", 
-            "IVR_Identify" => "nullable|int", 
-            "user_activa" => "nullable|int", 
-            "fecha_activa" => "nullable|date", 
-            "user_cancela" => "nullable|int", 
-            "fecha_cancela" => "nullable|date", 
-            "id_troncal" => "nullable|int", 
-            "aleatorio" => "nullable|int", 
-            "tipo_llamada" => "nullable|int", 
-            "did" => "nullable|string", 
-            "actualizacion" => "nullable|int"
+            "client_id" => "int", 
+            "total" => "string", 
+            "doc_type" => "int", 
+            "doc_number" => "int",
         ]);
 
         if($validator->fails()){
@@ -86,17 +63,9 @@ class OrdersController extends Controller
 
     }
 
-    public function deleteOrders($id,Request $request): object 
+    public function deleteOrders($id): object 
     {
-        $validator = Validator::make($request->all(),[
-            "tipo_estado" => "int"
-        ]);
-
-        if($validator->fails()){
-            return (object) ResponseHelper::json_fail($validator);
-        }
-
-        $response = OrdersRepository::DeleteOrders($id,$request);
+        $response = OrdersRepository::DeleteOrders($id);
         if(!$response){
             return (object) ResponseHelper::json_fail($response);
         }

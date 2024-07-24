@@ -11,13 +11,10 @@ use Illuminate\Http\Request;
 
 class ClientsRepository
 {
-    public static function getClients($request)
-    {
-        $id = $request->input("id");
-        $tipo_estado = $request->input("tipo_estado");
+    public static function getClients($dni)
+    { 
         $sql = "select * from pos_client where 1 ";
-        if($id!=0){ $sql .= " and id = '$id' "; }
-        if($id!=0){ $sql .= " and tipo_estado = '$tipo_estado' "; }
+        if($dni!=0){ $sql .= " and doc_number = '$dni' "; } 
         $data = DB::select($sql);
         return $data;
     }
@@ -25,57 +22,38 @@ class ClientsRepository
     public static function AddClients(Request $request)
     {
         $data = new pos_client;
-        $data->id_proveedor = $request['id_proveedor'];
-        $data->cartera = $request['cartera'];
-        $data->user_reg = auth()->user()['id'];
-        $data->fecha_reg = date('Y-m-d H:m:s');
-        $data->tipo_estado = $request['tipo_estado'];
-        $data->especial = $request['especial'];
-        $data->predictivo = $request['predictivo'];
-        $data->progresivo = $request['progresivo'];
-        $data->IVR_Identify = $request['IVR_Identify'];
-        $data->user_activa = $request['user_activa'];
-        $data->fecha_activa = $request['fecha_activa'];
-        $data->id_troncal = $request['id_troncal'];
-        $data->aleatorio = $request['aleatorio'];
-        $data->tipo_llamada = $request['tipo_llamada'];
-        $data->did = $request['did'];
-        $data->actualizacion = $request['actualizacion'];
+        $data->doc_type = $request['doc_type'];
+        $data->doc_number = $request['doc_number'];
+        // $data->user_reg = auth()->user()['id'];
+        // $data->fecha_reg = date('Y-m-d H:m:s');
+        $data->first_name = $request['first_name'];
+        $data->last_name = $request['last_name'];
+        $data->phone = $request['phone'];
+        $data->email = $request['email']; 
         return $data->save();
     }
 
-    public static function EditClients($id, Request $request)
+    public static function EditClients(Request $request)
     {
-        $data=pos_client::where('id','=',$id)->first();
-
-        $data->id = $request['id'];
-        $data->id_proveedor = $request['id_proveedor'];
-        $data->cartera = $request['cartera'];
-        $data->user_modi = auth()->user()['id'];
-        $data->fecha_modi = date('Y-m-d');
-        $data->tipo_estado = $request['tipo_estado'];
-        $data->especial = $request['especial'];
-        $data->predictivo = $request['predictivo'];
-        $data->progresivo = $request['progresivo'];
-        $data->IVR_Identify = $request['IVR_Identify'];
-        $data->user_activa = $request['user_activa'];
-        $data->fecha_activa = $request['fecha_activa'];
-        $data->user_cancela = $request['ser_cancela'];
-        $data->fecha_cancela = $request['fecha_cancela'];
-        $data->id_troncal = $request['id_troncal'];
-        $data->aleatorio = $request['aleatorio'];
-        $data->tipo_llamada = $request['tipo_llamada'];
-        $data->did = $request['did'];
-        $data->actualizacion = $request['actualizacion'];
-
-        return $data->save();
+        // $data=pos_client::where('client_id','=',$request['id'])->first();
+        $client_id = $request['client_id'];
+        $doc_type = $request['doc_type'];
+        $doc_number = $request['doc_number'];
+        // $user_reg = auth()->user()['id'];
+        // $fecha_reg = date('Y-m-d H:m:s');
+        $first_name = $request['first_name'];
+        $last_name = $request['last_name'];
+        $phone = $request['phone'];
+        $email = $request['email']; 
+        
+        DB::select("UPDATE pos_client set doc_type='$doc_type',doc_number='$doc_number',first_name='$first_name',last_name='$last_name',phone='$phone',email='$email' where client_id=$client_id");
+        return $client_id;
     }
 
-    public static function DeleteClients($id,Request $request)
+    public static function DeleteClients($id)
     {
-        $data = pos_client::where ('id','=',$id)->first();
-        $data->tipo_estado = 0;
-        return $data->save();
+        $data = pos_client::find($id); 
+        return  $data->delete(); 
     }
 
 

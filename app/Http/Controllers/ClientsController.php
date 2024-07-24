@@ -9,17 +9,9 @@ use Illuminate\Support\Facades\Validator;
 
 class ClientsController extends Controller
 {
-    public function getClients(Request $request): object 
-    {
-        $validator = Validator::make($request->all(),[
-            "id" => "int",
-            "tipo_estado" => "nullable|int", 
-        ]);
-
-        if($validator->fails()){
-            return (object) ResponseHelper::json_fail($validator);
-        }
-        $response = ClientsRepository::getClients($request);
+    public function getClients($dni): object 
+    { 
+        $response = ClientsRepository::getClients($dni);
 
         return (object) ResponseHelper::json_success($response);
 
@@ -27,21 +19,13 @@ class ClientsController extends Controller
 
     public function addClients(Request $request): object 
     {
-        $validator = Validator::make($request->all(),[
-            "id_proveedor" => "int", 
-            "cartera" => "string", 
-            "tipo_estado" => "int", 
-            "especial" => "nullable|int", 
-            "predictivo" => "nullable|int", 
-            "progresivo" => "nullable|int", 
-            "IVR_Identify" => "nullable|int", 
-            "user_activa" => "int|nullable", 
-            "fecha_activa" => "date|nullable",
-            "id_troncal" => "nullable|int", 
-            "aleatorio" => "nullable|int", 
-            "tipo_llamada" => "nullable|int", 
-            "did" => "nullable|string", 
-            "actualizacion" => "nullable|int"
+        $validator = Validator::make($request->all(),[ 
+            "doc_number" => "string", 
+            "doc_type" => "int", 
+            "email" => "string", 
+            "first_name" => "string", 
+            "last_name" => "string", 
+            "phone" => "string",  
         ]);
 
         if($validator->fails()){
@@ -51,35 +35,25 @@ class ClientsController extends Controller
         if (!$response) {
             return (object) ResponseHelper::json_fail($response);
         }
-        return (object) ResponseHelper::json_success(array(),"");
+        return (object) ResponseHelper::json_success(array(),"success");
     }
 
-    public function editClients($id,Request $request): object 
+    public function editClientes(Request $request): object 
     {
         $validator = Validator::make($request->all(),[
-            "id_proveedor" => "required|int", 
-            "cartera" => "required|string", 
-            "tipo_estado" => "nullable|int", 
-            "especial" => "nullable|int", 
-            "predictivo" => "nullable|int", 
-            "progresivo" => "nullable|int", 
-            "IVR_Identify" => "nullable|int", 
-            "user_activa" => "nullable|int", 
-            "fecha_activa" => "nullable|date", 
-            "user_cancela" => "nullable|int", 
-            "fecha_cancela" => "nullable|date", 
-            "id_troncal" => "nullable|int", 
-            "aleatorio" => "nullable|int", 
-            "tipo_llamada" => "nullable|int", 
-            "did" => "nullable|string", 
-            "actualizacion" => "nullable|int"
+            "doc_number" => "string", 
+            "doc_type" => "int", 
+            "email" => "string", 
+            "first_name" => "string", 
+            "last_name" => "string", 
+            "phone" => "string",  
         ]);
 
         if($validator->fails()){
             return (object) ResponseHelper::json_fail_puts($validator);
         }
 
-        $response = ClientsRepository::EditClients($id,$request);
+        $response = ClientsRepository::EditClients($request);
         if(!$response){
             return (object) ResponseHelper::json_fail($response);
         }
@@ -87,17 +61,10 @@ class ClientsController extends Controller
 
     }
 
-    public function deleteClients($id,Request $request): object 
+    public function deleteClients($id): object 
     {
-        $validator = Validator::make($request->all(),[
-            "tipo_estado" => "int"
-        ]);
 
-        if($validator->fails()){
-            return (object) ResponseHelper::json_fail($validator);
-        }
-
-        $response = ClientsRepository::DeleteClients($id,$request);
+        $response = ClientsRepository::DeleteClients($id);
         if(!$response){
             return (object) ResponseHelper::json_fail($response);
         }
